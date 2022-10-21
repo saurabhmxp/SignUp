@@ -31,19 +31,28 @@ class Label_TextField: UIView {
         field.layer.borderWidth = 2
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: field.frame.height))
         field.leftViewMode = UITextField.ViewMode.always
-        updateConstraints()
+        setLabelConstraints()
+        setFieldConstraints()
     }
     
-    override func updateConstraints() {
-        super.updateConstraints()
-        heightAnchor.constraint(equalToConstant: 70).isActive = true
+    func setLabelConstraints() {
+        label.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: leadingAnchor),
+            label.topAnchor.constraint(equalTo: topAnchor),
+            label.heightAnchor.constraint(equalToConstant: 30),
+        ])
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        let size = bounds.size.width
-        label.frame = CGRect(x: 0, y: 0, width: size, height: 30)
-        field.frame = CGRect(x: 0, y: 40, width: size, height: 30)
+    func setFieldConstraints() {
+        field.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            field.leadingAnchor.constraint(equalTo: leadingAnchor),
+            field.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 10),
+            field.heightAnchor.constraint(equalToConstant: 30),
+            field.widthAnchor.constraint(equalTo: widthAnchor),
+            field.bottomAnchor.constraint(equalTo: bottomAnchor) //most important
+        ])
     }
     
     func config(labelText: String) {
@@ -92,7 +101,6 @@ class Label_TextField: UIView {
     func addDatePicker() {
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
-        
         let doneBtn = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(didTapDone))
         toolbar.setItems([doneBtn], animated: true)
         field.inputAccessoryView = toolbar
@@ -106,7 +114,6 @@ class Label_TextField: UIView {
     @objc func didTapDone() {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        formatter.dateFormat = "dd/mm/yyyy"
         formatter.timeStyle = .none
         
         field.text = formatter.string(from: picker.date)

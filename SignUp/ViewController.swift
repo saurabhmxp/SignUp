@@ -70,6 +70,7 @@ class ViewController: UIViewController {
         scrollView.addSubview(stackView)
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
+        stackView.spacing = 10
         firstName.config(labelText: "First Name")
         lastName.config(labelText: "Last Name")
         dateOfBirth.config(labelText: "Date of Birth")
@@ -95,7 +96,6 @@ class ViewController: UIViewController {
             stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            stackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
         ])
     }
     
@@ -116,7 +116,6 @@ class ViewController: UIViewController {
             profileImageView.heightAnchor.constraint(equalTo: profileImageView.widthAnchor)
         ])
         profileImageView.layer.masksToBounds = true
-        profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
     }
 }
 
@@ -125,6 +124,7 @@ extension ViewController: UIImagePickerControllerDelegate & UINavigationControll
         guard let image = info[.editedImage] as? UIImage else { return }
         dismiss(animated: true)
         profileImageView.image = image
+        profileImageView.layer.cornerRadius = profileImageView.frame.size.width / 2
     }
 }
 
