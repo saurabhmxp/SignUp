@@ -7,16 +7,16 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+final class ViewController: UIViewController {
     
-    let userInfo = Person(firstName: "", lastName: "", email: "", password: "")
-    var oldContentInset = UIEdgeInsets.zero
-    var oldIndicatorInset = UIEdgeInsets.zero
-    var oldOffset = CGPoint.zero
-    var keyboardShowing = false
+    private var userInfo: Person?
+    private var oldContentInset = UIEdgeInsets.zero
+    private var oldIndicatorInset = UIEdgeInsets.zero
+    private var oldOffset = CGPoint.zero
+    private var keyboardShowing = false
     
     
-    let profileImageView: UIImageView = {
+    private lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
         imageView.layer.masksToBounds = true
@@ -25,33 +25,32 @@ class ViewController: UIViewController {
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
-    let button: UIButton = {
+    private lazy var button: UIButton = {
         let button = UIButton(type: .system)
         button.configuration = .filled()
         button.setTitle("Submit", for: .normal)
         button.layer.cornerRadius = 5
         return button
     }()
-    
-    let firstName = Label_TextField()
-    let lastName = Label_TextField()
-    let phoneNo = Label_TextField()
-    let dateOfBirth = Label_TextField()
-    let email = Label_TextField()
-    let password = Label_TextField()
-    
-    let stackView = UIStackView()
-    let scrollView: UIScrollView = {
+    private lazy var stackView = UIStackView()
+    private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         return scrollView
     }()
+    
+    private let firstName = FormEntry(labelText: "First Name")
+    private let lastName = FormEntry(labelText: "Last Name")
+    private let phoneNo = FormEntry(labelText: "Phone No")
+    private let dateOfBirth = FormEntry(labelText: "Date of Birth")
+    private let email = FormEntry(labelText: "Email")
+    private let password = FormEntry(labelText: "Password")
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Hello All"
         view.backgroundColor = .systemBackground
         configureScrollView()
-        configImageView()
+        configureImageView()
         configureStackView()
         profileImageView.addGestureRecognizer(
             UITapGestureRecognizer(
@@ -80,6 +79,7 @@ class ViewController: UIViewController {
         )
     }
     
+//MARK: Selector Functions
     @objc func hideKeyboard() {
         view.endEditing(true)
     }
@@ -101,21 +101,27 @@ class ViewController: UIViewController {
             ac.addAction(UIAlertAction(title: "Dismiss", style: .cancel))
             present(ac, animated: true)
         } else {
-            userInfo.firstName = firstName.getFieldText() ?? ""
-            userInfo.lastName = lastName.getFieldText() ?? ""
+            let user = Person(phoneNo: 0, email: "", password: "")
+            user.firstName = firstName.fieldValue
+            user.lastName = lastName.fieldValue
             
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MMM dd, yyyy"
-            userInfo.dateOfBirth = dateFormatter.date(from: dateOfBirth.getFieldText() ?? "")
+            let date = dateFormatter.date(from: dateOfBirth.fieldValue ?? "")
+            user.dateOfBirth = date
             
-            userInfo.phoneNo = Int(phoneNo.getFieldText() ?? "")
-            userInfo.email = email.getFieldText() ?? ""
-            userInfo.password = password.getFieldText() ?? ""
+            if let number = Int(phoneNo.fieldValue ?? "") {
+                user.phoneNo = number
+            }
+            user.email = email.fieldValue ?? ""
+            user.password = password.fieldValue ?? ""
             
-            let image = profileImageView.image ?? UIImage(systemName: "person.circle")
-            userInfo.image = image
+            if let image = profileImageView.image {
+                user.image = image
+            }
             
-            let nextVC = DetailsVC(userInfo: userInfo)
+            self.userInfo = user
+            let nextVC = DetailsVC(userInfo: self.userInfo!)
             navigationController?.pushViewController(nextVC, animated: true)
         }
     }
@@ -149,7 +155,8 @@ class ViewController: UIViewController {
         self.scrollView.contentInset = self.oldContentInset
     }
     
-    func configImageView() {
+//MARK: Configurations
+    func configureImageView() {
         scrollView.addSubview(profileImageView)
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -177,12 +184,6 @@ class ViewController: UIViewController {
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
         stackView.spacing = 10
-        firstName.config(labelText: "First Name")
-        lastName.config(labelText: "Last Name")
-        dateOfBirth.config(labelText: "Date of Birth")
-        phoneNo.config(labelText: "Phone No")
-        email.config(labelText: "Email")
-        password.config(labelText: "Password")
         dateOfBirth.addDatePicker()
         phoneNo.phoneKeyboard()
         email.emailKeyboard()
@@ -207,6 +208,7 @@ class ViewController: UIViewController {
     }
 }
 
+//MARK: UIImagePickerControllerDelegate
 extension ViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {

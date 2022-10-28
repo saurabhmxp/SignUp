@@ -7,10 +7,10 @@
 
 import UIKit
 
-class Label_TextField: UIView {
+class FormEntry: UIView {
 
-    private let label = UILabel()
-    private let field: UITextField = {
+    private lazy var label = UILabel()
+    private lazy var field: UITextField = {
         let field = UITextField()
         field.layer.cornerRadius = 5
         field.layer.borderColor = UIColor.lightGray.cgColor
@@ -20,7 +20,7 @@ class Label_TextField: UIView {
         field.leftViewMode = UITextField.ViewMode.always
         return field
     }()
-    private var dataCheck: UILabel = {
+    private lazy var dataCheck: UILabel = {
         let label = UILabel()
         label.text = "Required"
         label.textColor = .systemRed
@@ -28,15 +28,18 @@ class Label_TextField: UIView {
         label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
-    private let picker = UIDatePicker()
-    private var isVisible = false
-    private let imageView: UIImageView = {
+    private lazy var picker = UIDatePicker()
+    private lazy var imageView: UIImageView = {
         let image = UIImageView()
         image.tintColor = .white
         image.image = UIImage(systemName: "eye.fill")
         image.isUserInteractionEnabled = true
         return image
     }()
+    private var isVisible = false
+    var fieldValue: String?{
+        return field.text
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -49,35 +52,12 @@ class Label_TextField: UIView {
         setDataCheckConstraints()
     }
     
-    func setLabelConstraints() {
-        label.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: leadingAnchor),
-            label.topAnchor.constraint(equalTo: topAnchor),
-            label.heightAnchor.constraint(equalToConstant: 30),
-        ])
+    required init?(coder: NSCoder) {
+        fatalError()
     }
     
-    func setFieldConstraints() {
-        field.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            field.leadingAnchor.constraint(equalTo: leadingAnchor),
-            field.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 10),
-            field.heightAnchor.constraint(equalToConstant: 30),
-            field.widthAnchor.constraint(equalTo: widthAnchor),
-        ])
-    }
-    
-    func setDataCheckConstraints() {
-        dataCheck.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            dataCheck.leadingAnchor.constraint(equalTo: leadingAnchor),
-            dataCheck.topAnchor.constraint(equalTo: field.bottomAnchor, constant: 5),
-            dataCheck.bottomAnchor.constraint(equalTo: bottomAnchor),
-        ])
-    }
-    
-    func config(labelText: String) {
+    convenience init(labelText: String) {
+        self.init(frame: .zero)
         label.text = labelText
         field.placeholder = labelText
         switch labelText {
@@ -95,14 +75,35 @@ class Label_TextField: UIView {
         }
     }
     
-    func getFieldText() -> String? {
-        return field.text
+    func setLabelConstraints() {
+        label.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: leadingAnchor),
+            label.topAnchor.constraint(equalTo: topAnchor),
+            label.heightAnchor.constraint(equalToConstant: 30),
+        ])
     }
     
-    func errorPresent() -> Bool {
-        return !dataCheck.isHidden
+    func setFieldConstraints() {
+        field.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            field.leadingAnchor.constraint(equalTo: leadingAnchor),
+            field.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 10),
+            field.heightAnchor.constraint(equalToConstant: 50),
+            field.widthAnchor.constraint(equalTo: widthAnchor),
+        ])
     }
     
+    func setDataCheckConstraints() {
+        dataCheck.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            dataCheck.leadingAnchor.constraint(equalTo: leadingAnchor),
+            dataCheck.topAnchor.constraint(equalTo: field.bottomAnchor, constant: 5),
+            dataCheck.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
+    }
+    
+//MARK: Keyboard Customizations
     func phoneKeyboard() {
         field.keyboardType = .phonePad
         
@@ -111,6 +112,59 @@ class Label_TextField: UIView {
     func emailKeyboard() {
         field.autocapitalizationType = .none
         field.keyboardType = .emailAddress
+    }
+    
+    func customizePasswordField() {
+        let rightView = UIView()
+        rightView.addSubview(imageView)
+        rightView.frame = CGRect(x: 0, y: 0, width: imageView.image!.size.width, height: imageView.image!.size.height)
+        imageView.frame = CGRect(x: -10, y: 0, width: imageView.image!.size.width, height: imageView.image!.size.height)
+        imageView.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(didTapEye(sender:))
+            )
+        )
+        field.rightView = rightView
+        field.rightViewMode = .always
+        field.isSecureTextEntry = true
+    }
+    
+    @objc func didTapEye(sender: UITapGestureRecognizer) {
+       if isVisible {
+           field.isSecureTextEntry = true
+           imageView.image = UIImage(systemName: "eye.fill")
+           isVisible = false
+       } else {
+           field.isSecureTextEntry = false
+           imageView.image = UIImage(systemName: "eye.slash.fill")
+           isVisible = true
+       }
+   }
+    
+    func addDatePicker() {
+        picker.frame.size = CGSize(width: 0, height: 150)
+        picker.datePickerMode = .date
+        let maximumDate = Date() - (18*365*86400)
+        let minimumDate = Date() - (60*365*86400)
+        picker.maximumDate = maximumDate
+        picker.minimumDate = minimumDate
+        picker.addTarget(self, action: #selector(didTapDone(sender:)), for: .editingDidEnd)
+        field.inputView = picker
+    }
+    
+    @objc func didTapDone(sender: UIDatePicker) {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        
+        field.text = formatter.string(from: sender.date)
+        field.endEditing(true)
+    }
+
+//MARK: DataChecks
+    func errorPresent() -> Bool {
+        return !dataCheck.isHidden
     }
     
     @objc func emailChanged() {
@@ -172,53 +226,4 @@ class Label_TextField: UIView {
         }
         return nil
     }
-    
-    func customizePasswordField() {
-        let rightView = UIView()
-        rightView.addSubview(imageView)
-        rightView.frame = CGRect(x: 0, y: 0, width: imageView.image!.size.width, height: imageView.image!.size.height)
-        imageView.frame = CGRect(x: -10, y: 0, width: imageView.image!.size.width, height: imageView.image!.size.height)
-        imageView.addGestureRecognizer(
-            UITapGestureRecognizer(
-                target: self,
-                action: #selector(didTapEye(sender:))
-            )
-        )
-        field.rightView = rightView
-        field.rightViewMode = .always
-        field.isSecureTextEntry = true
-    }
-    
-     @objc func didTapEye(sender: UITapGestureRecognizer) {
-        if isVisible {
-            field.isSecureTextEntry = true
-            imageView.image = UIImage(systemName: "eye.fill")
-            isVisible = false
-        } else {
-            field.isSecureTextEntry = false
-            imageView.image = UIImage(systemName: "eye.slash.fill")
-            isVisible = true
-        }
-    }
-    
-    func addDatePicker() {
-        picker.frame.size = CGSize(width: 0, height: 150)
-        picker.datePickerMode = .date
-        picker.addTarget(self, action: #selector(didTapDone(sender:)), for: .editingDidEnd)
-        field.inputView = picker
-    }
-    
-    @objc func didTapDone(sender: UIDatePicker) {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        
-        field.text = formatter.string(from: sender.date)
-        field.endEditing(true)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
-
 }

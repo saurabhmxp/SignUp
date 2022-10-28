@@ -10,14 +10,20 @@ import UIKit
 
 class Person {
     var image: UIImage?
-    var firstName: String
-    var lastName: String
+    var firstName: String?
+    var lastName: String?
     var dateOfBirth: Date?
-    var phoneNo: Int?
+    var phoneNo: Int
     var email: String
     var password: String
     
-    init(image: UIImage? = nil, firstName: String, lastName: String, dateOfBirth: Date? = nil, phoneNo: Int? = nil, email: String, password: String) {
+    init(image: UIImage? = UIImage(systemName: "person.circle"),
+         firstName: String? = nil,
+         lastName: String? = nil,
+         dateOfBirth: Date? = nil,
+         phoneNo: Int,
+         email: String,
+         password: String) {
         self.image = image
         self.firstName = firstName
         self.lastName = lastName

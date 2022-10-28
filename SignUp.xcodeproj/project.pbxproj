@@ -13,8 +13,8 @@
 		560BD104290128DF00B3E8C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 560BD103290128DF00B3E8C3 /* Assets.xcassets */; };
 		560BD107290128DF00B3E8C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 560BD105290128DF00B3E8C3 /* LaunchScreen.storyboard */; };
 		560BD10F29012AFE00B3E8C3 /* DetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560BD10E29012AFE00B3E8C3 /* DetailsVC.swift */; };
-		560BD1112901474800B3E8C3 /* Label_TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560BD1102901474800B3E8C3 /* Label_TextField.swift */; };
-		562CE222290A646F00AC3AE4 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562CE221290A646F00AC3AE4 /* UserInfo.swift */; };
+		560BD1112901474800B3E8C3 /* FormEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560BD1102901474800B3E8C3 /* FormEntry.swift */; };
+		562CE222290A646F00AC3AE4 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562CE221290A646F00AC3AE4 /* Person.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,8 +26,8 @@
 		560BD106290128DF00B3E8C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		560BD108290128DF00B3E8C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		560BD10E29012AFE00B3E8C3 /* DetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsVC.swift; sourceTree = "<group>"; };
-		560BD1102901474800B3E8C3 /* Label_TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label_TextField.swift; sourceTree = "<group>"; };
-		562CE221290A646F00AC3AE4 /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
+		560BD1102901474800B3E8C3 /* FormEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormEntry.swift; sourceTree = "<group>"; };
+		562CE221290A646F00AC3AE4 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,13 +62,13 @@
 			children = (
 				560BD0FA290128DD00B3E8C3 /* AppDelegate.swift */,
 				560BD0FC290128DD00B3E8C3 /* SceneDelegate.swift */,
-				560BD1102901474800B3E8C3 /* Label_TextField.swift */,
+				560BD1102901474800B3E8C3 /* FormEntry.swift */,
 				560BD0FE290128DD00B3E8C3 /* ViewController.swift */,
 				560BD10E29012AFE00B3E8C3 /* DetailsVC.swift */,
+				562CE221290A646F00AC3AE4 /* Person.swift */,
 				560BD103290128DF00B3E8C3 /* Assets.xcassets */,
 				560BD105290128DF00B3E8C3 /* LaunchScreen.storyboard */,
 				560BD108290128DF00B3E8C3 /* Info.plist */,
-				562CE221290A646F00AC3AE4 /* UserInfo.swift */,
 			);
 			path = SignUp;
 			sourceTree = "<group>";
@@ -143,11 +143,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				560BD1112901474800B3E8C3 /* Label_TextField.swift in Sources */,
+				560BD1112901474800B3E8C3 /* FormEntry.swift in Sources */,
 				560BD0FF290128DD00B3E8C3 /* ViewController.swift in Sources */,
 				560BD10F29012AFE00B3E8C3 /* DetailsVC.swift in Sources */,
 				560BD0FB290128DD00B3E8C3 /* AppDelegate.swift in Sources */,
-				562CE222290A646F00AC3AE4 /* UserInfo.swift in Sources */,
+				562CE222290A646F00AC3AE4 /* Person.swift in Sources */,
 				560BD0FD290128DD00B3E8C3 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
